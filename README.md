@@ -1,6 +1,6 @@
 # ImgShr #
 
-A script to upload images to ImgShr.com service from the command line. The script returns the URL to the RAW image.
+A script to upload images to [imgshr.com](http://imgshr.com) service from the command line. The script returns the URL to the RAW image.
 
 # Installation #
 
