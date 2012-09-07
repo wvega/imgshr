@@ -13,17 +13,28 @@ class ImgShr(object):
     def __init__(self):
         self.url = 'http://imgshr.com/upload/send'
 
-    def upload(self, image, legend=None):
+    def upload(self, images=[], label=None):
+        uploaded = {}
 
-        if not os.path.exists(image):
-            return None
+        if isinstance(images, basestring):
+            images = [images]
+        if isinstance(images, file):
+            images = [images]
 
-        f = {"0_file": open(image, 'rb')}
-        d = {"0_source": "computer", "NBR_FILE": 1, "MAX_FILE_SIZE": 1000000}
-        r = requests.post(self.url, data=d, files=f)
+        for image in images:
+            if not isinstance(image, file):
+                image = open(image, 'rb')
 
-        match = self.regex.search(r.text)
+            f = {"0_file": image}
+            d = {"0_legend": label, "0_source": "computer", "NBR_FILE": 1, "MAX_FILE_SIZE": 1000000}
+            r = requests.post(self.url, data=d, files=f)
 
-        if match is not None and match.lastindex == 1:
-            return 'http://imgshr.com/i/%s' % match.group(1)
-        return None
+            name = os.path.basename(image.name)
+            match = self.regex.search(r.text)
+
+            if match is not None and match.lastindex == 1:
+                uploaded[name] = 'http://imgshr.com/i/%s' % match.group(1)
+            else:
+                uploaded[name] = None
+
+        return uploaded if len(uploaded) > 0 else None

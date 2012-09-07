@@ -1,11 +1,30 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 #coding: utf-8
 
+import argparse
 import os
-import sys
 
 from imgshr import ImgShr
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Upload images to ImgShr.com service.')
+    parser.add_argument('label', type=str, nargs='?')
+    parser.add_argument('images', type=argparse.FileType('rb'), nargs='+')
+    args = parser.parse_args()
+
+    label = args.label
+    images = args.images
+
+    try:
+        images.insert(0, open(label))
+        label = None
+    except (IOError, TypeError):
+        pass
+
     imgshr = ImgShr()
-    print imgshr.upload(os.path.realpath(sys.argv[1]))
+    response = imgshr.upload(images, label=label)
+
+    template = '{name:40}{url:12}'
+    for image in images:
+        name = os.path.basename(image.name)
+        print template.format(name=name, url=response[name])
