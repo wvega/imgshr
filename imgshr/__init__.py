@@ -25,8 +25,13 @@ class ImgShr(object):
             if not isinstance(image, file):
                 image = open(image, 'rb')
 
+            d = {
+                "0_legend": label if label is not None else '',
+                "0_source": "computer",
+                "NBR_FILE": 1,
+                "MAX_FILE_SIZE": 1000000
+            }
             f = {"0_file": image}
-            d = {"0_legend": label, "0_source": "computer", "NBR_FILE": 1, "MAX_FILE_SIZE": 1000000}
             r = requests.post(self.url, data=d, files=f)
 
             name = os.path.basename(image.name)
