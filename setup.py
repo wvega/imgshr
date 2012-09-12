@@ -11,7 +11,7 @@ def read(filename):
 
 setup(
     name='ImgShr',
-    version='0.0.2',
+    version='0.0.3',
     author='Willington Vega',
     author_email='wvega@wvega.com',
     description=('A script to upload images to ImgShr.com service.'),
